@@ -94,10 +94,23 @@ namespace GenyoInstaller
             // we have instances
             Form_PrismInstanceSelector selector = new();
             selector.InputInstances = InstancesList;
+
+            List<string> SelectedInstances = new();
             
             if (selector.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show("yay");
+                SelectedInstances = selector.OutputInstances;
+
+                if (SelectedInstances.Count == 0)
+                {
+                    CloseWithError("No instances were selected.");
+                    return;
+                }
+
+                foreach (string selected in SelectedInstances)
+                {
+                    MessageBox.Show(selected);
+                }
             }
         }
 

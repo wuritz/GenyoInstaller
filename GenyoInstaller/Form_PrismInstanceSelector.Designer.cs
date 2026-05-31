@@ -31,8 +31,9 @@
             label1 = new Label();
             checkedListBox1 = new CheckedListBox();
             label2 = new Label();
-            button1 = new Button();
-            button2 = new Button();
+            btnOK = new Button();
+            btnCancel = new Button();
+            btnSelectAll = new Button();
             SuspendLayout();
             // 
             // label1
@@ -50,50 +51,61 @@
             checkedListBox1.FormattingEnabled = true;
             checkedListBox1.Location = new Point(8, 28);
             checkedListBox1.Name = "checkedListBox1";
-            checkedListBox1.Size = new Size(336, 202);
+            checkedListBox1.Size = new Size(336, 184);
             checkedListBox1.TabIndex = 1;
             // 
             // label2
             // 
             label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(8, 236);
+            label2.Location = new Point(8, 244);
             label2.Name = "label2";
             label2.Size = new Size(297, 15);
             label2.TabIndex = 2;
             label2.Text = "Remember Genyo's MC version and select accordingly.";
             // 
-            // button1
+            // btnOK
             // 
-            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button1.DialogResult = DialogResult.OK;
-            button1.Location = new Point(269, 287);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 3;
-            button1.Text = "&OK";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnOK.DialogResult = DialogResult.OK;
+            btnOK.Location = new Point(269, 287);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new Size(75, 23);
+            btnOK.TabIndex = 3;
+            btnOK.Text = "&OK";
+            btnOK.UseVisualStyleBackColor = true;
+            btnOK.Click += btnOK_Click;
             // 
-            // button2
+            // btnCancel
             // 
-            button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button2.DialogResult = DialogResult.Cancel;
-            button2.Location = new Point(188, 287);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 4;
-            button2.Text = "Cancel";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.Location = new Point(188, 287);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(75, 23);
+            btnCancel.TabIndex = 4;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnSelectAll
+            // 
+            btnSelectAll.Location = new Point(8, 218);
+            btnSelectAll.Name = "btnSelectAll";
+            btnSelectAll.Size = new Size(75, 23);
+            btnSelectAll.TabIndex = 5;
+            btnSelectAll.Text = "Select All";
+            btnSelectAll.UseVisualStyleBackColor = true;
+            btnSelectAll.Click += btnSelectAll_Click;
             // 
             // Form_PrismInstanceSelector
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(369, 322);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(btnSelectAll);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOK);
             Controls.Add(label2);
             Controls.Add(checkedListBox1);
             Controls.Add(label1);
@@ -109,7 +121,8 @@
         private Label label1;
         private CheckedListBox checkedListBox1;
         private Label label2;
-        private Button button1;
-        private Button button2;
+        private Button btnOK;
+        private Button btnCancel;
+        private Button btnSelectAll;
     }
 }
