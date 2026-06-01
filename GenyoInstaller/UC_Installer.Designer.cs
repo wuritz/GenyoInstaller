@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UC_Installer));
             btnDiscord = new Button();
             btnWebsite = new Button();
             btnChangelogs = new Button();
@@ -86,7 +87,9 @@
             // label3
             // 
             label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
             label3.Font = new Font("Segoe UI", 13F);
+            label3.ForeColor = Color.White;
             label3.Location = new Point(17, 213);
             label3.Name = "label3";
             label3.Size = new Size(59, 25);
@@ -96,6 +99,8 @@
             // label2
             // 
             label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.ForeColor = Color.White;
             label2.Location = new Point(17, 194);
             label2.Name = "label2";
             label2.Size = new Size(82, 15);
@@ -115,6 +120,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Image = Properties.Resources.genyo512;
             pictureBox1.Location = new Point(17, 18);
             pictureBox1.Name = "pictureBox1";
@@ -126,7 +132,9 @@
             // label4
             // 
             label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
             label4.Font = new Font("Segoe UI", 22F);
+            label4.ForeColor = Color.White;
             label4.Location = new Point(127, 43);
             label4.Name = "label4";
             label4.Size = new Size(203, 41);
@@ -136,6 +144,8 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.ForeColor = Color.White;
             label1.Location = new Point(17, 129);
             label1.Name = "label1";
             label1.Size = new Size(95, 15);
@@ -145,7 +155,9 @@
             // lbInstalled
             // 
             lbInstalled.AutoSize = true;
+            lbInstalled.BackColor = Color.Transparent;
             lbInstalled.Font = new Font("Segoe UI", 13F);
+            lbInstalled.ForeColor = Color.White;
             lbInstalled.Location = new Point(17, 148);
             lbInstalled.Name = "lbInstalled";
             lbInstalled.Size = new Size(55, 25);
@@ -156,6 +168,8 @@
             // 
             lbGenyoStatus.AutoEllipsis = true;
             lbGenyoStatus.AutoSize = true;
+            lbGenyoStatus.BackColor = Color.Transparent;
+            lbGenyoStatus.ForeColor = Color.White;
             lbGenyoStatus.Location = new Point(455, 276);
             lbGenyoStatus.Name = "lbGenyoStatus";
             lbGenyoStatus.RightToLeft = RightToLeft.No;
@@ -169,6 +183,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             Controls.Add(lbGenyoStatus);
             Controls.Add(btnDiscord);
             Controls.Add(btnWebsite);

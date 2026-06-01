@@ -12,6 +12,7 @@ namespace GenyoInstaller
     {
         public bool SelectManually;
         public bool OnlyPrism;
+        public bool IgnoreFM;
 
         public UC_Options()
         {
@@ -22,17 +23,26 @@ namespace GenyoInstaller
         {
             SelectManually = cbSelectManually.Checked;
             OnlyPrism = cbPrism.Checked;
+            IgnoreFM = cbIgnore.Checked;
+
+            tt_CB1.SetToolTip(cbSelectManually, "Instead of the installer looking for folders, you decide where explicitly to install Genyo.");
+            tt_CB2.SetToolTip(cbPrism, "The installer only looks for PrismLauncher instances, ignoring the '.minecraft' default folder that Minecraft Launcher uses");
+            tt_CB3.SetToolTip(cbIgnore, "The installer blocks the download if it can't find Fabric or Meteor in your 'mods' folder. This ignores that check.");
         }
 
         private void cbPrism_CheckedChanged(object sender, EventArgs e)
         {
-            SelectManually = cbSelectManually.Checked;
             OnlyPrism = cbPrism.Checked;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void cbSelectManually_CheckedChanged(object sender, EventArgs e)
         {
+            SelectManually = cbSelectManually.Checked;
+        }
 
+        private void cbIgnore_CheckedChanged(object sender, EventArgs e)
+        {
+            IgnoreFM = cbIgnore.Checked;
         }
     }
 }
