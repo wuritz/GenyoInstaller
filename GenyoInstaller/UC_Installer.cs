@@ -14,7 +14,7 @@ namespace GenyoInstaller
     {
         public bool installing = false;
         public string latestVersion = "";
-        private Form1 parent;
+        public Form1 parent;
 
         public UC_Installer(Form1 parentForm)
         {
@@ -22,73 +22,9 @@ namespace GenyoInstaller
             InitializeComponent();
         }
 
-        private async void UC_Installer_Load(object sender, EventArgs e)
+        private void UC_Installer_Load(object sender, EventArgs e)
         {
-            // Installed Version
-            PathSearcher searcher = new();
-            string dir = "";
-            List<string> versions = new();
-
-            dir = searcher.SearchMC();
-            if (dir == string.Empty) dir = searcher.SearchPrism();
-            if (dir == string.Empty)
-            {
-                lbInstalled.Text = "None";
-            } else
-            {
-                if (Directory.Exists(dir))
-                {
-                    var files = Directory.EnumerateFiles(dir, "genyo-addon-*", SearchOption.AllDirectories);
-                    if (files.Any())
-                    {
-                        foreach (var file in files)
-                        {
-                            string version = Path.GetFileName(file).Split("-")[2].Replace(".jar", "");
-                            versions.Add(version);
-                        }
-
-                        Dictionary<string, int> versionsDict = new();
-
-                        foreach (var version in versions)
-                        {
-                            if (versionsDict.ContainsKey(version))
-                            {
-                                versionsDict[version] += 1;
-                            } else
-                            {
-                                versionsDict[version] = 1;
-                            }
-                        }
-
-                        if (versionsDict.Count > 2)
-                        {
-                            lbInstalled.Text = "Multiple found.";
-                        }
-                        else
-                        {
-                            if (versionsDict.Count == 1)
-                            {
-                                lbInstalled.Text = $"{versionsDict.ElementAt(0).Key} ({versionsDict.ElementAt(0).Value})";
-                            }
-                            else lbInstalled.Text = $"{versionsDict.ElementAt(0).Key} ({versionsDict.ElementAt(0).Value}), ${versionsDict.ElementAt(1).Key} ({versionsDict.ElementAt(1).Value})";
-                        }
-                    }
-                }
-            }
-
-            // Latest Version
-            label3.Text = "Fetching...";
-
-            latestVersion = await GetLatestVersion();
-            label3.Text = latestVersion;
-
-            // lb Status
-            if (versions.Contains(latestVersion))
-                lbGenyoStatus.Text = "Genyo is up to date!";
-            else if (versions.Count != 0)
-                lbGenyoStatus.Text = "New Genyo is available!";
-            else
-                lbGenyoStatus.Text = "";
+            RefreshLabels();
         }
 
         private async Task<string> GetLatestVersion()
@@ -114,6 +50,90 @@ namespace GenyoInstaller
             catch
             {
                 return "Offline";
+            }
+        }
+
+        public async void RefreshLabels()
+        {
+            List<string> versions = new();
+            RefreshLatestVersionLabel(versions);
+
+            // Latest Version
+            label3.Text = "Fetching...";
+
+            latestVersion = await GetLatestVersion();
+            label3.Text = latestVersion;
+
+            // lb Status
+            if (versions.Contains(latestVersion))
+                lbGenyoStatus.Text = "Genyo is up to date!";
+            else if (versions.Count != 0)
+                lbGenyoStatus.Text = "New Genyo is available!";
+            else
+                lbGenyoStatus.Text = "";
+        }
+
+        private void RefreshLatestVersionLabel(List<string> versions)
+        {
+            // Installed Version
+            PathSearcher searcher = new();
+            List<string> directories = new();
+            
+            string dir_ = "";
+            
+            dir_ = searcher.SearchPrism();
+            if (dir_ != string.Empty) directories.Add(dir_);
+            dir_ = searcher.SearchMC(true);
+            if (dir_ != string.Empty) directories.Add(dir_);
+
+            if (directories.Count == 0)
+            {
+                lbInstalled.Text = "None";
+            }
+            else
+            {
+                foreach (string dir in directories)
+                {
+                    if (Directory.Exists(dir))
+                    {
+                        var files = Directory.EnumerateFiles(dir, "genyo-addon-*", SearchOption.AllDirectories);
+                        if (files.Any())
+                        {
+                            foreach (var file in files)
+                            {
+                                string version = Path.GetFileName(file).Split("-")[2].Replace(".jar", "");
+                                versions.Add(version);
+                            }
+
+                            Dictionary<string, int> versionsDict = new();
+
+                            foreach (var version in versions)
+                            {
+                                if (versionsDict.ContainsKey(version))
+                                {
+                                    versionsDict[version] += 1;
+                                }
+                                else
+                                {
+                                    versionsDict[version] = 1;
+                                }
+                            }
+
+                            if (versionsDict.Count > 2)
+                            {
+                                lbInstalled.Text = "Multiple found.";
+                            }
+                            else
+                            {
+                                if (versionsDict.Count == 1)
+                                {
+                                    lbInstalled.Text = $"{versionsDict.ElementAt(0).Key} ({versionsDict.ElementAt(0).Value})";
+                                }
+                                else lbInstalled.Text = $"{versionsDict.ElementAt(0).Key} ({versionsDict.ElementAt(0).Value}), ${versionsDict.ElementAt(1).Key} ({versionsDict.ElementAt(1).Value})";
+                            }
+                        }
+                    }
+                }
             }
         }
 

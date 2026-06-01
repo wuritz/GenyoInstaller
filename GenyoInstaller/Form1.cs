@@ -1,8 +1,9 @@
+using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Reflection;
+using static GenyoInstaller.UC_Options;
 
 namespace GenyoInstaller
 {
@@ -10,19 +11,27 @@ namespace GenyoInstaller
     {
         public string CurrentVersion = "";
 
+        public UC_Installer uc_installer;
+
+        // Options
+        public bool manualInstallLocation;
+        public bool explicitLauncher;
+        public LauncherTypes selectedExplicitLauncher;
+        public bool ignoreFabricMeteor;
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            UC_Installer uc = new(this);
-            uc.Dock = DockStyle.Fill;
+            uc_installer = new(this);
+            uc_installer.Dock = DockStyle.Fill;
             tbInstaller.Controls.Clear();
-            tbInstaller.Controls.Add(uc);
+            tbInstaller.Controls.Add(uc_installer);
 
-            UC_Options ucO = new();
+            UC_Options ucO = new(this);
             ucO.Dock = DockStyle.Fill;
             tbOptions.Controls.Clear();
             tbOptions.Controls.Add(ucO);

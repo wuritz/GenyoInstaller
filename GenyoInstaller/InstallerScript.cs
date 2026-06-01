@@ -15,30 +15,19 @@ namespace GenyoInstaller
 
         public InstallerScript(UC_Installer parentUC)
         {
-            uc = parentUC; 
-            options = new UC_Options();
+            uc = parentUC;
         }
 
         public async void StartInstalling()
         {
             uc.installing = true;
 
-            // Find MC folder
-            // Find PrismLauncher too
-            // Select between MC and Prism
-            //      Select Prism profile if needed
-            // Find Meteor folder
-            // Make sure Fabric is installed
-            // Find mods folder
-            // Download .jar from GitHub
-            // Install .jar
-            // Show done msgbox
-
             string dir = "";
 
             PathSearcher pathSearcher = new();
 
-            if (options.OnlyPrism)
+            if (uc.parent.explicitLauncher
+                && uc.parent.selectedExplicitLauncher == UC_Options.LauncherTypes.PrismLauncher)
                 dir = pathSearcher.SearchPrism();
             else
                 dir = pathSearcher.SearchMC();
@@ -49,10 +38,10 @@ namespace GenyoInstaller
                 return;
             }
 
-            if (pathSearcher.IsUsingPrism())
+            if (pathSearcher.usingPrism)
                 await InstallPrism(dir);
             else
-                InstallMC();
+                await InstallMC(dir);
         }
 
         private async Task InstallPrism(string PrismDir)
@@ -70,7 +59,7 @@ namespace GenyoInstaller
 
             foreach (string current in Directory.GetDirectories(InstancesDir))
             {
-                string ModsDir = Path.Combine(Path.Combine(current, "minecraft"), "mods");
+                string ModsDir = Path.Combine(current, "minecraft", "mods");
 
                 if (!Directory.Exists(ModsDir))
                 {
@@ -78,7 +67,7 @@ namespace GenyoInstaller
                 }
                 else
                 {
-                    if (!new PathSearcher().CheckForFabricMeteor(ModsDir)) continue;
+                    if (!new PathSearcher().CheckForFabricMeteor(ModsDir) && !uc.parent.ignoreFabricMeteor) continue;
                     InstancesList.Add(Path.GetFileName(current));
                 }
             }
@@ -149,6 +138,61 @@ namespace GenyoInstaller
                 string destination = Path.Combine(instanceModsPath, Path.GetFileName(tempFile));
                 File.Copy(tempFile, destination, overwrite: true);
             }
+
+            // clean up the temp file
+            File.Delete(tempFile);
+
+            if (!form_Progress.IsDisposed)
+                form_Progress.Close();
+
+            MessageBox.Show("Genyo Addon installed successfully!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            uc.installing = false;
+            uc.Reload();
+        }
+
+        private async Task InstallMC(string mcDir)
+        {
+            string modsDir = Path.Combine(mcDir, "mods");
+            if (!Directory.Exists(modsDir))
+            {
+                CloseWithError("Couldn't find 'mods' folder.");
+                return;
+            }
+
+            if (!new PathSearcher().CheckForFabricMeteor(modsDir) && !uc.parent.ignoreFabricMeteor)
+            {
+                CloseWithError("You don't have Fabric or Meteor installed in your 'mods' folder. Please install them first!");
+                return;
+            }
+
+            // check for duplicates
+            var latestFiles = Directory.EnumerateFiles(modsDir, $"genyo-addon-{uc.latestVersion}*", SearchOption.TopDirectoryOnly);
+            if (latestFiles.Any())
+            {
+                if (MessageBox.Show($"You already have the latest Genyo version installed. (Minecraft Launcher) \n\nDo you still want to proceed?",
+                    "Confirmation needed",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                {
+                    CloseWithError("Aborted.");
+                    return;
+                }
+            }
+
+            Form_Progress form_Progress = new();
+            form_Progress.Show();
+
+            var progress = new Progress<(int percent, long bytesRead, long totalBytes)>(report => {
+                form_Progress.SetProgress(report.percent, report.bytesRead, report.totalBytes);
+            });
+
+            string tempFile = await DownloadJarToTemp(progress);
+
+            if (tempFile == null)
+                return;
+
+            // install to mods folder
+            string destination = Path.Combine(modsDir, Path.GetFileName(tempFile));
+            File.Copy(tempFile, destination, overwrite: true);
 
             // clean up the temp file
             File.Delete(tempFile);
@@ -246,11 +290,6 @@ namespace GenyoInstaller
                 CloseWithError($"Unexpected error: {ex.Message}");
                 return null;
             }
-        }
-
-        private void InstallMC()
-        {
-
         }
 
         private void CloseWithError(string msg)

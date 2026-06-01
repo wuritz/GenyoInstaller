@@ -6,9 +6,9 @@ namespace GenyoInstaller
 {
     internal class PathSearcher
     {
-        bool usingPrism = false;
+        public bool usingPrism = false;
 
-        public string SearchMC()
+        public string SearchMC(bool noPrism = false)
         {
             string outputDir = "";
             string dir = Path.Combine(
@@ -17,6 +17,8 @@ namespace GenyoInstaller
 
             if (!Directory.Exists(dir))
             {
+                if (noPrism) return string.Empty;
+
                 // look for prism
                 string prismDir = SearchPrism();
 
@@ -50,6 +52,7 @@ namespace GenyoInstaller
             }
             else
             {
+                usingPrism = true;
                 outputDir = dir;
             }
 
