@@ -22,8 +22,13 @@ namespace GenyoInstaller
         {
             uc.installing = true;
 
-            string dir = "";
+            if (uc.parent.manualInstallLocation)
+            {
+                HandleManualInstall();
+                return;
+            }
 
+            string dir = "";
             PathSearcher pathSearcher = new();
 
             if (uc.parent.explicitLauncher
@@ -42,6 +47,63 @@ namespace GenyoInstaller
                 await InstallPrism(dir);
             else
                 await InstallMC(dir);
+        }
+
+        private async void HandleManualInstall()
+        {
+            FolderBrowserDialog fbd = new();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string dir = fbd.SelectedPath;
+
+                if (MessageBox.Show($"You've entered '{dir}' as install location. \n\nDo you wish to proceed?",
+                    "Confirmation needed",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    var latestFiles = Directory.EnumerateFiles(dir, $"genyo-addon-{uc.latestVersion}*", SearchOption.TopDirectoryOnly);
+                    if (latestFiles.Any())
+                    {
+                        if (MessageBox.Show($"You already have the latest Genyo version installed in this folder.\n\nDo you still want to proceed?",
+                            "Confirmation needed",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                        {
+                            CloseWithError("Aborted.");
+                            return;
+                        }
+                    }
+
+                    Form_Progress form_Progress = new();
+                    form_Progress.Show();
+
+                    var progress = new Progress<(int percent, long bytesRead, long totalBytes)>(report => {
+                        form_Progress.SetProgress(report.percent, report.bytesRead, report.totalBytes);
+                    });
+
+                    string tempFile = await DownloadJarToTemp(progress);
+
+                    if (tempFile == null)
+                        return;
+
+                    // install to mods folder
+                    string destination = Path.Combine(dir, Path.GetFileName(tempFile));
+                    File.Copy(tempFile, destination, overwrite: true);
+
+                    // clean up the temp file
+                    File.Delete(tempFile);
+
+                    if (!form_Progress.IsDisposed)
+                        form_Progress.Close();
+
+                    MessageBox.Show("Genyo Addon installed successfully!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    uc.installing = false;
+                    uc.Reload();
+                } else
+                {
+                    CloseWithError("Aborted.");
+                    return;
+                }
+            }
         }
 
         private async Task InstallPrism(string PrismDir)

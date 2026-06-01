@@ -16,6 +16,8 @@ namespace GenyoInstaller
         public string latestVersion = "";
         public Form1 parent;
 
+        private bool offline = false;
+
         public UC_Installer(Form1 parentForm)
         {
             parent = parentForm;
@@ -49,6 +51,7 @@ namespace GenyoInstaller
             }
             catch
             {
+                offline = true;
                 return "Offline";
             }
         }
@@ -67,7 +70,7 @@ namespace GenyoInstaller
             // lb Status
             if (versions.Contains(latestVersion))
                 lbGenyoStatus.Text = "Genyo is up to date!";
-            else if (versions.Count != 0)
+            else if (versions.Count != 0 && !offline)
                 lbGenyoStatus.Text = "New Genyo is available!";
             else
                 lbGenyoStatus.Text = "";
