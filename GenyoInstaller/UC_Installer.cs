@@ -13,6 +13,7 @@ namespace GenyoInstaller
     public partial class UC_Installer : UserControl
     {
         public bool installing = false;
+        public string latestVersion = "";
         private Form1 parent;
 
         public UC_Installer(Form1 parentForm)
@@ -78,7 +79,7 @@ namespace GenyoInstaller
             // Latest Version
             label3.Text = "Fetching...";
 
-            string latestVersion = await GetLatestVersion();
+            latestVersion = await GetLatestVersion();
             label3.Text = latestVersion;
 
             // lb Status

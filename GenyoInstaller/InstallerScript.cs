@@ -13,8 +13,6 @@ namespace GenyoInstaller
         private UC_Installer uc;
         UC_Options options;
 
-        private bool UsingPrism = false;
-
         public InstallerScript(UC_Installer parentUC)
         {
             uc = parentUC; 
@@ -110,17 +108,26 @@ namespace GenyoInstaller
             }
 
             // Check for duplicates or older versions
-            /*List<Tuple<string, string>> duplicateInstances = new();
-            foreach (string Instance in SelectedInstances)
+            foreach (string Instance in SelectedInstances.ToList())
             {
-                var files = Directory.EnumerateFiles(Path.Combine(InstancesDir, Instance, "minecraft", "mods"), "genyo-addon-*", SearchOption.TopDirectoryOnly);
+                var files = Directory.EnumerateFiles(Path.Combine(InstancesDir, Instance, "minecraft", "mods"), $"genyo-addon-{uc.latestVersion}*", SearchOption.TopDirectoryOnly);
                 if (files.Any())
                 {
-                    // handle duplicate
-                    duplicateInstances.Add(Tuple.Create(Instance, files.First()));
-                    // TODO: finish
+                    if (MessageBox.Show($"You already have the latest Genyo version installed in the '{Instance}' instance.\n\nDo you still want to proceed?", 
+                        "Confirmation needed", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    {
+                        SelectedInstances.Remove(Instance);
+                    }
                 }
-            }*/
+            }
+
+            // If we abort all of them
+            if (SelectedInstances.Count == 0)
+            {
+                CloseWithError("No instances were selected.");
+                return;
+            }
 
             // download to a temp file
             Form_Progress form_Progress = new();
