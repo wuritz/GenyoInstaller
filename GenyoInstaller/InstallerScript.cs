@@ -38,10 +38,12 @@ namespace GenyoInstaller
 
             string dir = "";
 
+            PathSearcher pathSearcher = new();
+
             if (options.OnlyPrism)
-                dir = SearchPrism();
+                dir = pathSearcher.SearchPrism();
             else
-                dir = SearchMC();
+                dir = pathSearcher.SearchMC();
 
             if (dir == string.Empty)
             {
@@ -49,7 +51,7 @@ namespace GenyoInstaller
                 return;
             }
 
-            if (UsingPrism)
+            if (pathSearcher.IsUsingPrism())
                 await InstallPrism(dir);
             else
                 InstallMC();
@@ -106,6 +108,19 @@ namespace GenyoInstaller
                 return;
             }
 
+            // Check for duplicates or older versions
+            /*List<Tuple<string, string>> duplicateInstances = new();
+            foreach (string Instance in SelectedInstances)
+            {
+                var files = Directory.EnumerateFiles(Path.Combine(InstancesDir, Instance, "minecraft", "mods"), "genyo-addon-*", SearchOption.TopDirectoryOnly);
+                if (files.Any())
+                {
+                    // handle duplicate
+                    duplicateInstances.Add(Tuple.Create(Instance, files.First()));
+                    // TODO: finish
+                }
+            }*/
+
             // download to a temp file
             Form_Progress form_Progress = new();
             form_Progress.Show();
@@ -134,6 +149,8 @@ namespace GenyoInstaller
                 form_Progress.Close();
 
             MessageBox.Show("Genyo Addon installed successfully!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            uc.installing = false;
+            uc.Reload();
         }
 
         private async Task<string> DownloadJarToTemp(IProgress<(int percent, long bytesRead, long totalBytes)> progress = null)
@@ -226,52 +243,6 @@ namespace GenyoInstaller
         private void InstallMC()
         {
 
-        }
-
-        private string SearchMC()
-        {
-            string outputDir = "";
-            string dir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft"
-            );
-            
-            if (!Directory.Exists(dir))
-            {
-                // look for prism
-                string prismDir = SearchPrism();
-
-                if (prismDir == string.Empty || prismDir == null)
-                {
-                    // handle manual select
-                    return string.Empty;
-                }
-
-                UsingPrism = true;
-                outputDir = prismDir;
-            } else
-            {
-                outputDir = dir;
-            }
-
-            return outputDir;
-        }
-
-        private string SearchPrism()
-        {
-            string outputDir = "";
-            string dir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PrismLauncher"
-            );
-
-            if (!Directory.Exists(dir))
-            {
-                return string.Empty;
-            } else
-            {
-                outputDir = dir;
-            }
-
-            return outputDir;
         }
 
         private void CloseWithError(string msg)

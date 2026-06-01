@@ -37,6 +37,9 @@
             btnInstall = new Button();
             pictureBox1 = new PictureBox();
             label4 = new Label();
+            label1 = new Label();
+            lbInstalled = new Label();
+            lbGenyoStatus = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -62,7 +65,7 @@
             // 
             // btnChangelogs
             // 
-            btnChangelogs.Location = new Point(17, 174);
+            btnChangelogs.Location = new Point(17, 241);
             btnChangelogs.Name = "btnChangelogs";
             btnChangelogs.Size = new Size(108, 28);
             btnChangelogs.TabIndex = 17;
@@ -84,7 +87,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 13F);
-            label3.Location = new Point(17, 146);
+            label3.Location = new Point(17, 213);
             label3.Name = "label3";
             label3.Size = new Size(59, 25);
             label3.TabIndex = 14;
@@ -93,7 +96,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(17, 127);
+            label2.Location = new Point(17, 194);
             label2.Name = "label2";
             label2.Size = new Size(82, 15);
             label2.TabIndex = 13;
@@ -102,7 +105,7 @@
             // btnInstall
             // 
             btnInstall.Font = new Font("Segoe UI", 12F);
-            btnInstall.Location = new Point(377, 229);
+            btnInstall.Location = new Point(377, 225);
             btnInstall.Name = "btnInstall";
             btnInstall.Size = new Size(190, 48);
             btnInstall.TabIndex = 12;
@@ -130,22 +133,56 @@
             label4.TabIndex = 10;
             label4.Text = "Genyo Addon";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(17, 129);
+            label1.Name = "label1";
+            label1.Size = new Size(95, 15);
+            label1.TabIndex = 13;
+            label1.Text = "Installed version:";
+            // 
+            // lbInstalled
+            // 
+            lbInstalled.AutoSize = true;
+            lbInstalled.Font = new Font("Segoe UI", 13F);
+            lbInstalled.Location = new Point(17, 148);
+            lbInstalled.Name = "lbInstalled";
+            lbInstalled.Size = new Size(55, 25);
+            lbInstalled.TabIndex = 14;
+            lbInstalled.Text = "None";
+            // 
+            // lbGenyoStatus
+            // 
+            lbGenyoStatus.AutoEllipsis = true;
+            lbGenyoStatus.AutoSize = true;
+            lbGenyoStatus.Location = new Point(455, 276);
+            lbGenyoStatus.Name = "lbGenyoStatus";
+            lbGenyoStatus.RightToLeft = RightToLeft.No;
+            lbGenyoStatus.Size = new Size(112, 15);
+            lbGenyoStatus.TabIndex = 19;
+            lbGenyoStatus.Text = "Genyo is up to date!";
+            lbGenyoStatus.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // UC_Installer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
+            Controls.Add(lbGenyoStatus);
             Controls.Add(btnDiscord);
             Controls.Add(btnWebsite);
             Controls.Add(btnChangelogs);
             Controls.Add(btnGitHub);
+            Controls.Add(lbInstalled);
             Controls.Add(label3);
+            Controls.Add(label1);
             Controls.Add(label2);
             Controls.Add(btnInstall);
             Controls.Add(pictureBox1);
             Controls.Add(label4);
             Name = "UC_Installer";
-            Size = new Size(587, 306);
+            Size = new Size(588, 313);
             Load += UC_Installer_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
@@ -162,5 +199,8 @@
         private Button btnInstall;
         private PictureBox pictureBox1;
         private Label label4;
+        private Label label1;
+        private Label lbInstalled;
+        private Label lbGenyoStatus;
     }
 }

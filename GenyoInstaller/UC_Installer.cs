@@ -13,19 +13,81 @@ namespace GenyoInstaller
     public partial class UC_Installer : UserControl
     {
         public bool installing = false;
+        private Form1 parent;
 
-        public UC_Installer()
+        public UC_Installer(Form1 parentForm)
         {
+            parent = parentForm;
             InitializeComponent();
         }
 
         private async void UC_Installer_Load(object sender, EventArgs e)
         {
-            // Version
+            // Installed Version
+            PathSearcher searcher = new();
+            string dir = "";
+            List<string> versions = new();
+
+            dir = searcher.SearchMC();
+            if (dir == string.Empty) dir = searcher.SearchPrism();
+            if (dir == string.Empty)
+            {
+                lbInstalled.Text = "None";
+            } else
+            {
+                if (Directory.Exists(dir))
+                {
+                    var files = Directory.EnumerateFiles(dir, "genyo-addon-*", SearchOption.AllDirectories);
+                    if (files.Any())
+                    {
+                        foreach (var file in files)
+                        {
+                            string version = Path.GetFileName(file).Split("-")[2].Replace(".jar", "");
+                            versions.Add(version);
+                        }
+
+                        Dictionary<string, int> versionsDict = new();
+
+                        foreach (var version in versions)
+                        {
+                            if (versionsDict.ContainsKey(version))
+                            {
+                                versionsDict[version] += 1;
+                            } else
+                            {
+                                versionsDict[version] = 1;
+                            }
+                        }
+
+                        if (versionsDict.Count > 2)
+                        {
+                            lbInstalled.Text = "Multiple found.";
+                        }
+                        else
+                        {
+                            if (versionsDict.Count == 1)
+                            {
+                                lbInstalled.Text = $"{versionsDict.ElementAt(0).Key} ({versionsDict.ElementAt(0).Value})";
+                            }
+                            else lbInstalled.Text = $"{versionsDict.ElementAt(0).Key} ({versionsDict.ElementAt(0).Value}), ${versionsDict.ElementAt(1).Key} ({versionsDict.ElementAt(1).Value})";
+                        }
+                    }
+                }
+            }
+
+            // Latest Version
             label3.Text = "Fetching...";
 
             string latestVersion = await GetLatestVersion();
             label3.Text = latestVersion;
+
+            // lb Status
+            if (versions.Contains(latestVersion))
+                lbGenyoStatus.Text = "Genyo is up to date!";
+            else if (versions.Count != 0)
+                lbGenyoStatus.Text = "New Genyo is available!";
+            else
+                lbGenyoStatus.Text = "";
         }
 
         private async Task<string> GetLatestVersion()
@@ -104,6 +166,12 @@ namespace GenyoInstaller
 
             InstallerScript installerScript = new InstallerScript(this);
             installerScript.StartInstalling();
+        }
+
+        public void Reload()
+        {
+            UC_Installer newInstaller = new UC_Installer(parent);
+            parent.ReloadUCInstaller(newInstaller);
         }
     }
 }

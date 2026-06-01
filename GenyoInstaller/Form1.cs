@@ -17,7 +17,7 @@ namespace GenyoInstaller
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            UC_Installer uc = new();
+            UC_Installer uc = new(this);
             uc.Dock = DockStyle.Fill;
             tbInstaller.Controls.Clear();
             tbInstaller.Controls.Add(uc);
@@ -27,9 +27,21 @@ namespace GenyoInstaller
             tbOptions.Controls.Clear();
             tbOptions.Controls.Add(ucO);
 
+            UC_Installed uC_Installed = new();
+            uC_Installed.Dock = DockStyle.Fill;
+            tbInstalled.Controls.Clear();
+            tbInstalled.Controls.Add(uC_Installed);
+
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             CurrentVersion = $"{version.Major}.{version.Minor}.{version.Build}";
             label7.Text = $"v{CurrentVersion}";
+        }
+
+        public void ReloadUCInstaller(UC_Installer newUC)
+        {
+            newUC.Dock = DockStyle.Fill;
+            tbInstaller.Controls.Clear();
+            tbInstaller.Controls.Add(newUC);
         }
     }
 }
