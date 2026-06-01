@@ -35,7 +35,7 @@
             btnCancel = new Button();
             btnSelectAll = new Button();
             btnDeselectAll = new Button();
-            label3 = new Label();
+            lbFabricMeteor = new Label();
             SuspendLayout();
             // 
             // label1
@@ -112,23 +112,23 @@
             btnDeselectAll.UseVisualStyleBackColor = true;
             btnDeselectAll.Click += btnDeselectAll_Click;
             // 
-            // label3
+            // lbFabricMeteor
             // 
-            label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label3.AutoSize = true;
-            label3.BackColor = Color.LightCoral;
-            label3.Location = new Point(12, 284);
-            label3.Name = "label3";
-            label3.Size = new Size(366, 15);
-            label3.TabIndex = 6;
-            label3.Text = "You won't see instances which don't have Fabric or Meteor installed.";
+            lbFabricMeteor.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lbFabricMeteor.AutoSize = true;
+            lbFabricMeteor.BackColor = Color.LightCoral;
+            lbFabricMeteor.Location = new Point(12, 284);
+            lbFabricMeteor.Name = "lbFabricMeteor";
+            lbFabricMeteor.Size = new Size(366, 15);
+            lbFabricMeteor.TabIndex = 6;
+            lbFabricMeteor.Text = "You won't see instances which don't have Fabric or Meteor installed.";
             // 
             // Form_PrismInstanceSelector
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(477, 374);
-            Controls.Add(label3);
+            Controls.Add(lbFabricMeteor);
             Controls.Add(btnDeselectAll);
             Controls.Add(btnSelectAll);
             Controls.Add(btnCancel);
@@ -153,6 +153,6 @@
         private Button btnCancel;
         private Button btnSelectAll;
         private Button btnDeselectAll;
-        private Label label3;
+        private Label lbFabricMeteor;
     }
 }

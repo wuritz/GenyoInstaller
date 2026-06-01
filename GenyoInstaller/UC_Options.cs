@@ -39,6 +39,18 @@ namespace GenyoInstaller
         private void cbSelectManually_CheckedChanged(object sender, EventArgs e)
         {
             parentForm.manualInstallLocation = cbSelectManually.Checked;
+
+            if (cbSelectManually.Checked)
+            {
+                if (MessageBox.Show("Note that enabling this completely skips any checks that ensure only valid install locations are used.\n\nDo you wish to proceed?", 
+                    "Confirmation needed", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                    != DialogResult.Yes)
+                {
+                    parentForm.manualInstallLocation = false;
+                    cbSelectManually.Checked = false;
+                }
+            }
         }
 
         private void cbIgnore_CheckedChanged(object sender, EventArgs e)

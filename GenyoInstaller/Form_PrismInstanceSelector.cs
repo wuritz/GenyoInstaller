@@ -58,5 +58,10 @@ namespace GenyoInstaller
                 checkedListBox1.SetItemChecked(i, false);
             }
         }
+
+        public void HideFMLabel()
+        {
+            lbFabricMeteor.Visible = false;
+        }
     }
 }

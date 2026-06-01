@@ -81,6 +81,7 @@ namespace GenyoInstaller
             // we have instances
             Form_PrismInstanceSelector selector = new();
             selector.InputInstances = InstancesList;
+            if (uc.parent.ignoreFabricMeteor) selector.HideFMLabel();
 
             if (selector.ShowDialog() != DialogResult.OK)
             {
