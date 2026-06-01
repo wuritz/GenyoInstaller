@@ -4,7 +4,8 @@ This repo is up mainly for educational purposes, that shouldn't really be taken 
 Unfortunately it's a Windows application, but I'll remake this in Java one day so that everyone can use it.<br>
 Until then, have fun using this little installer :>
 
-**Yes I know the .exe is 100 MBs**
+## ⚠️ Important: download the .rar first, see if it runs.
+If not, there's the 100 MB fully-compiled .exe version.
 
 ## Features
 - Automatically detects your Prism Launcher instances, and gives you the option to choose which ones you would like to install Genyo to.
