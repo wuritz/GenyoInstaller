@@ -42,8 +42,8 @@ namespace GenyoInstaller
 
             if (cbSelectManually.Checked)
             {
-                if (MessageBox.Show("Note that enabling this completely skips any checks that ensure only valid install locations are used.\n\nDo you wish to proceed?", 
-                    "Confirmation needed", 
+                if (MessageBox.Show("Note that enabling this completely skips any checks that ensure only valid install locations are used.\n\nDo you wish to proceed?",
+                    "Confirmation needed",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                     != DialogResult.Yes)
                 {

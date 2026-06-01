@@ -39,7 +39,6 @@
             label3 = new Label();
             comboB_Launcher = new ComboBox();
             cbOnlyLauncher = new CheckBox();
-            btnSave = new Button();
             SuspendLayout();
             // 
             // cbSelectManually
@@ -58,9 +57,9 @@
             cbIgnore.AutoSize = true;
             cbIgnore.Location = new Point(6, 140);
             cbIgnore.Name = "cbIgnore";
-            cbIgnore.Size = new Size(198, 19);
+            cbIgnore.Size = new Size(216, 19);
             cbIgnore.TabIndex = 2;
-            cbIgnore.Text = "Ignore Fabric and Meteor checks";
+            cbIgnore.Text = "Ignore checks for Fabric and Meteor";
             cbIgnore.UseVisualStyleBackColor = true;
             cbIgnore.CheckedChanged += cbIgnore_CheckedChanged;
             // 
@@ -115,21 +114,10 @@
             cbOnlyLauncher.UseVisualStyleBackColor = true;
             cbOnlyLauncher.CheckedChanged += cbOnlyLauncher_CheckedChanged;
             // 
-            // btnSave
-            // 
-            btnSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnSave.Location = new Point(462, 230);
-            btnSave.Name = "btnSave";
-            btnSave.Size = new Size(127, 34);
-            btnSave.TabIndex = 8;
-            btnSave.Text = "Save Settings";
-            btnSave.UseVisualStyleBackColor = true;
-            // 
             // UC_Options
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(btnSave);
             Controls.Add(cbOnlyLauncher);
             Controls.Add(comboB_Launcher);
             Controls.Add(label3);
@@ -156,6 +144,5 @@
         private Label label3;
         private ComboBox comboB_Launcher;
         private CheckBox cbOnlyLauncher;
-        private Button btnSave;
     }
 }
