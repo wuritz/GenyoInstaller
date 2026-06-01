@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
+using System.Text.Json;
+using System.Net.Http;
 
 namespace GenyoInstaller
 {
@@ -19,7 +21,7 @@ namespace GenyoInstaller
             options = new UC_Options();
         }
 
-        public void StartInstalling()
+        public async void StartInstalling()
         {
             uc.installing = true;
 
@@ -37,12 +39,9 @@ namespace GenyoInstaller
             string dir = "";
 
             if (options.OnlyPrism)
-            {
                 dir = SearchPrism();
-            } else
-            {
+            else
                 dir = SearchMC();
-            }
 
             if (dir == string.Empty)
             {
@@ -51,15 +50,12 @@ namespace GenyoInstaller
             }
 
             if (UsingPrism)
-            {
-                InstallPrism(dir);
-            } else
-            {
+                await InstallPrism(dir);
+            else
                 InstallMC();
-            }
         }
 
-        private void InstallPrism(string PrismDir)
+        private async Task InstallPrism(string PrismDir)
         {
             string InstancesDir = Path.Combine(PrismDir, "instances");
 
@@ -79,7 +75,8 @@ namespace GenyoInstaller
                 if (!Directory.Exists(ModsDir))
                 {
                     continue;
-                } else
+                }
+                else
                 {
                     InstancesList.Add(Path.GetFileName(current));
                 }
@@ -95,22 +92,134 @@ namespace GenyoInstaller
             Form_PrismInstanceSelector selector = new();
             selector.InputInstances = InstancesList;
 
-            List<string> SelectedInstances = new();
-            
-            if (selector.ShowDialog() == DialogResult.OK)
+            if (selector.ShowDialog() != DialogResult.OK)
             {
-                SelectedInstances = selector.OutputInstances;
+                CloseWithError("No instances were selected.");
+                return;
+            }
 
-                if (SelectedInstances.Count == 0)
+            List<string> SelectedInstances = selector.OutputInstances;
+
+            if (SelectedInstances.Count == 0)
+            {
+                CloseWithError("No instances were selected.");
+                return;
+            }
+
+            // download to a temp file
+            Form_Progress form_Progress = new();
+            form_Progress.Show();
+
+            var progress = new Progress<(int percent, long bytesRead, long totalBytes)>(report => {
+                form_Progress.SetProgress(report.percent, report.bytesRead, report.totalBytes);
+            });
+
+            string tempFile = await DownloadJarToTemp(progress);
+
+            if (tempFile == null)
+                return;
+
+            // install to the instances
+            foreach (string instance in SelectedInstances)
+            {
+                string instanceModsPath = Path.Combine(InstancesDir, instance, "minecraft", "mods");
+                string destination = Path.Combine(instanceModsPath, Path.GetFileName(tempFile));
+                File.Copy(tempFile, destination, overwrite: true);
+            }
+
+            // clean up the temp file
+            File.Delete(tempFile);
+
+            if (!form_Progress.IsDisposed)
+                form_Progress.Close();
+
+            MessageBox.Show("Genyo Addon installed successfully!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private async Task<string> DownloadJarToTemp(IProgress<(int percent, long bytesRead, long totalBytes)> progress = null)
+        {
+            try
+            {
+                string currentVer = new Form1().CurrentVersion; // to avoid multiple form1 instances
+
+                // Separate clients because of compression
+                using HttpClient apiClient = new HttpClient();
+                apiClient.DefaultRequestHeaders.UserAgent.Add(
+                    new System.Net.Http.Headers.ProductInfoHeaderValue("GenyoInstaller", currentVer));
+
+                using HttpClient downloadClient = new HttpClient(new HttpClientHandler
                 {
-                    CloseWithError("No instances were selected.");
-                    return;
+                    AutomaticDecompression = System.Net.DecompressionMethods.None
+                });
+                downloadClient.DefaultRequestHeaders.UserAgent.Add(
+                    new System.Net.Http.Headers.ProductInfoHeaderValue("GenyoInstaller", currentVer));
+
+                // now the download
+                string apiUrl = "https://api.github.com/repos/wuritz/genyo-addon/releases/latest";
+
+                HttpResponseMessage response = await apiClient.GetAsync(apiUrl);
+                response.EnsureSuccessStatusCode();
+
+                string json = await response.Content.ReadAsStringAsync();
+                using JsonDocument doc = JsonDocument.Parse(json);
+                JsonElement root = doc.RootElement;
+
+                string jarDownloadUrl = null;
+                string jarFileName = null;
+
+                foreach (JsonElement asset in root.GetProperty("assets").EnumerateArray())
+                {
+                    string assetName = asset.GetProperty("name").GetString();
+                    if (assetName.EndsWith(".jar", StringComparison.OrdinalIgnoreCase))
+                    {
+                        jarDownloadUrl = asset.GetProperty("browser_download_url").GetString();
+                        jarFileName = assetName;
+                        break;
+                    }
                 }
 
-                foreach (string selected in SelectedInstances)
+                if (jarDownloadUrl == null)
                 {
-                    MessageBox.Show(selected);
+                    CloseWithError("No JAR file found in the latest GitHub release.");
+                    return null;
                 }
+
+                using HttpResponseMessage jarResponse = await downloadClient.GetAsync(jarDownloadUrl, HttpCompletionOption.ResponseHeadersRead);
+                jarResponse.EnsureSuccessStatusCode();
+
+                long? totalBytes = jarResponse.Content.Headers.ContentLength;
+                string tempPath = Path.Combine(Path.GetTempPath(), jarFileName);
+
+                using Stream contentStream = await jarResponse.Content.ReadAsStreamAsync();
+                using FileStream fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                byte[] buffer = new byte[8192];
+                long bytesRead = 0;
+                int read;
+
+                while ((read = await contentStream.ReadAsync(buffer)) > 0)
+                {
+                    await fileStream.WriteAsync(buffer.AsMemory(0, read));
+                    bytesRead += read;
+
+                    if (totalBytes.HasValue)
+                    {
+                        int percent = (int)((double)bytesRead / totalBytes.Value * 100);
+                        progress?.Report((percent, bytesRead, totalBytes.Value));
+                    }
+                }
+
+                return tempPath;
+            }
+            catch (HttpRequestException ex)
+            {
+                CloseWithError($"Network error while downloading: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                CloseWithError($"Unexpected error: {ex.Message}");
+                return null;
             }
         }
 
@@ -163,11 +272,6 @@ namespace GenyoInstaller
             }
 
             return outputDir;
-        }
-
-        private void ErrorMSGBox(string msg)
-        {
-            MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void CloseWithError(string msg)

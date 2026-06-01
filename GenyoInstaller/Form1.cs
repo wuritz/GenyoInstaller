@@ -8,6 +8,8 @@ namespace GenyoInstaller
 {
     public partial class Form1 : Form
     {
+        public string CurrentVersion = "";
+
         public Form1()
         {
             InitializeComponent();
@@ -26,7 +28,8 @@ namespace GenyoInstaller
             tbOptions.Controls.Add(ucO);
 
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            label7.Text = $"v{version.Major}.{version.Minor}.{version.Build}";
+            CurrentVersion = $"{version.Major}.{version.Minor}.{version.Build}";
+            label7.Text = $"v{CurrentVersion}";
         }
     }
 }

@@ -28,6 +28,7 @@ namespace GenyoInstaller
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            OutputInstances.Clear();
             foreach (string CurrentInstance in checkedListBox1.CheckedItems)
             {
                 OutputInstances.Add(CurrentInstance);
@@ -38,12 +39,24 @@ namespace GenyoInstaller
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            OutputInstances.Clear();
             Close();
         }
 
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            
+            for (int i = 0; i < checkedListBox1.Items.Count; i++)
+            {
+                checkedListBox1.SetItemChecked(i, true);
+            }
+        }
+
+        private void btnDeselectAll_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < checkedListBox1.Items.Count; i++)
+            {
+                checkedListBox1.SetItemChecked(i, false);
+            }
         }
     }
 }

@@ -34,6 +34,7 @@
             btnOK = new Button();
             btnCancel = new Button();
             btnSelectAll = new Button();
+            btnDeselectAll = new Button();
             SuspendLayout();
             // 
             // label1
@@ -92,17 +93,28 @@
             // 
             btnSelectAll.Location = new Point(8, 218);
             btnSelectAll.Name = "btnSelectAll";
-            btnSelectAll.Size = new Size(75, 23);
+            btnSelectAll.Size = new Size(90, 23);
             btnSelectAll.TabIndex = 5;
             btnSelectAll.Text = "Select All";
             btnSelectAll.UseVisualStyleBackColor = true;
             btnSelectAll.Click += btnSelectAll_Click;
+            // 
+            // btnDeselectAll
+            // 
+            btnDeselectAll.Location = new Point(104, 218);
+            btnDeselectAll.Name = "btnDeselectAll";
+            btnDeselectAll.Size = new Size(85, 23);
+            btnDeselectAll.TabIndex = 5;
+            btnDeselectAll.Text = "Deselect All";
+            btnDeselectAll.UseVisualStyleBackColor = true;
+            btnDeselectAll.Click += btnDeselectAll_Click;
             // 
             // Form_PrismInstanceSelector
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(369, 322);
+            Controls.Add(btnDeselectAll);
             Controls.Add(btnSelectAll);
             Controls.Add(btnCancel);
             Controls.Add(btnOK);
@@ -124,5 +136,6 @@
         private Button btnOK;
         private Button btnCancel;
         private Button btnSelectAll;
+        private Button btnDeselectAll;
     }
 }
