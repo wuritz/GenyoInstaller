@@ -27,11 +27,6 @@ namespace GenyoInstaller
             tbOptions.Controls.Clear();
             tbOptions.Controls.Add(ucO);
 
-            UC_Installed uC_Installed = new();
-            uC_Installed.Dock = DockStyle.Fill;
-            tbInstalled.Controls.Clear();
-            tbInstalled.Controls.Add(uC_Installed);
-
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             CurrentVersion = $"{version.Major}.{version.Minor}.{version.Build}";
             label7.Text = $"v{CurrentVersion}";

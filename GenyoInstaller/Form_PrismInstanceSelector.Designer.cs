@@ -35,6 +35,7 @@
             btnCancel = new Button();
             btnSelectAll = new Button();
             btnDeselectAll = new Button();
+            label3 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -52,14 +53,14 @@
             checkedListBox1.FormattingEnabled = true;
             checkedListBox1.Location = new Point(8, 28);
             checkedListBox1.Name = "checkedListBox1";
-            checkedListBox1.Size = new Size(336, 184);
+            checkedListBox1.Size = new Size(444, 220);
             checkedListBox1.TabIndex = 1;
             // 
             // label2
             // 
             label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(8, 244);
+            label2.Location = new Point(12, 303);
             label2.Name = "label2";
             label2.Size = new Size(297, 15);
             label2.TabIndex = 2;
@@ -69,7 +70,7 @@
             // 
             btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnOK.DialogResult = DialogResult.OK;
-            btnOK.Location = new Point(269, 287);
+            btnOK.Location = new Point(377, 339);
             btnOK.Name = "btnOK";
             btnOK.Size = new Size(75, 23);
             btnOK.TabIndex = 3;
@@ -81,7 +82,7 @@
             // 
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new Point(188, 287);
+            btnCancel.Location = new Point(296, 339);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 4;
@@ -91,7 +92,8 @@
             // 
             // btnSelectAll
             // 
-            btnSelectAll.Location = new Point(8, 218);
+            btnSelectAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnSelectAll.Location = new Point(9, 258);
             btnSelectAll.Name = "btnSelectAll";
             btnSelectAll.Size = new Size(90, 23);
             btnSelectAll.TabIndex = 5;
@@ -101,7 +103,8 @@
             // 
             // btnDeselectAll
             // 
-            btnDeselectAll.Location = new Point(104, 218);
+            btnDeselectAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDeselectAll.Location = new Point(105, 258);
             btnDeselectAll.Name = "btnDeselectAll";
             btnDeselectAll.Size = new Size(85, 23);
             btnDeselectAll.TabIndex = 5;
@@ -109,11 +112,23 @@
             btnDeselectAll.UseVisualStyleBackColor = true;
             btnDeselectAll.Click += btnDeselectAll_Click;
             // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label3.AutoSize = true;
+            label3.BackColor = Color.LightCoral;
+            label3.Location = new Point(12, 284);
+            label3.Name = "label3";
+            label3.Size = new Size(366, 15);
+            label3.TabIndex = 6;
+            label3.Text = "You won't see instances which don't have Fabric or Meteor installed.";
+            // 
             // Form_PrismInstanceSelector
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(369, 322);
+            ClientSize = new Size(477, 374);
+            Controls.Add(label3);
             Controls.Add(btnDeselectAll);
             Controls.Add(btnSelectAll);
             Controls.Add(btnCancel);
@@ -121,6 +136,7 @@
             Controls.Add(label2);
             Controls.Add(checkedListBox1);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "Form_PrismInstanceSelector";
             Text = "Select a Prism Instance";
             Load += Form_PrismInstanceSelector_Load;
@@ -137,5 +153,6 @@
         private Button btnCancel;
         private Button btnSelectAll;
         private Button btnDeselectAll;
+        private Label label3;
     }
 }

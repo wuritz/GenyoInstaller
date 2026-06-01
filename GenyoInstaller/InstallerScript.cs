@@ -80,6 +80,7 @@ namespace GenyoInstaller
                 }
                 else
                 {
+                    if (!new PathSearcher().CheckForFabricMeteor(ModsDir)) continue;
                     InstancesList.Add(Path.GetFileName(current));
                 }
             }

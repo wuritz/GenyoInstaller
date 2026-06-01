@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             label7 = new Label();
             label6 = new Label();
             tbOptions = new TabPage();
@@ -96,6 +97,8 @@
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(tabControl1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "Genyo Installer";
             Load += Form1_Load;

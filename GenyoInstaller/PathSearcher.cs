@@ -60,5 +60,18 @@ namespace GenyoInstaller
         {
             return usingPrism;
         }
+
+        public bool CheckForFabricMeteor(string path)
+        {
+            var fabricFiles = Directory.EnumerateFiles(path, "fabric-api-*", SearchOption.TopDirectoryOnly);
+            var meteorFiles = Directory.EnumerateFiles(path, "meteor-client-*", SearchOption.TopDirectoryOnly);
+
+            if (!fabricFiles.Any() || !meteorFiles.Any())
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

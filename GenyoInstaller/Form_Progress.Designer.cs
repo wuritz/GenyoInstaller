@@ -68,7 +68,7 @@
             Controls.Add(label2);
             Controls.Add(progressBar1);
             Controls.Add(label1);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form_Progress";
             Text = "Downloading Genyo";
             ResumeLayout(false);
